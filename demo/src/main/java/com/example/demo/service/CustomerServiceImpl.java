@@ -34,7 +34,8 @@ public class CustomerServiceImpl implements CustomerService {
 			theCustomer = result.get();
 		}
 		else {
-			throw new RuntimeException("Did not find customer id - " + theId);
+			// we didn't find the employee
+			throw new RuntimeException("Did not find employee id - " + theId);
 		}
 		
 		return theCustomer;
@@ -50,6 +51,20 @@ public class CustomerServiceImpl implements CustomerService {
 		customerRepository.deleteById(theId);
 	}
 
+	@Override
+	public List<Customer> searchBy(String theName) {
+		
+		List<Customer> results = null;
+		
+		if (theName != null && (theName.trim().length() > 0)) {
+			results = customerRepository.findByFirstNameContainsOrLastNameContainsAllIgnoreCase(theName, theName);
+		}
+		else {
+			results = findAll();
+		}
+		
+		return results;
+	}
 }
 
 

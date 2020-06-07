@@ -44,27 +44,48 @@ public class CustomerController {
 	}
 	
 	@GetMapping("/showFormForUpdate")
-	public String showFormForUpdate(@RequestParam("customerId") int theId,Model theModel) {
+	public String showFormForUpdate(@RequestParam("customerId") int theId,
+									Model theModel) {
 		
 		Customer theCustomer = customerService.findById(theId);
 		
 		theModel.addAttribute("customer", theCustomer);
+		
 		return "customer-form";
 	}
-	
-	@GetMapping("/showFormForDelete")
-	public String showFormForDelete(@RequestParam("customerId") int theId) {
-		
-		customerService.deleteById(theId);
-		
-		return "redirect:/customers/list";
-	}
+
 	@PostMapping("/save")
 	public String saveCustomer(@ModelAttribute("customer") Customer theCustomer) {
 	
 		customerService.save(theCustomer);
 		
 		return "redirect:/customers/list";
+	}
+	
+	@PostMapping("/delete")
+	public String delete(@RequestParam("customerId") int theId) {
+		
+		// delete the employee
+		customerService.deleteById(theId);
+		
+		// redirect to /employees/list
+		return "redirect:/customers/list";
+		
+	}
+	
+	@GetMapping("/search")
+	public String delete(@RequestParam("customerName") String theName,
+						 Model theModel) {
+		
+		// delete the employee
+		List<Customer> theCustomers = customerService.searchBy(theName);
+		
+		// add to the spring model
+		theModel.addAttribute("customer", theCustomers);
+		
+		// send to /employees/list
+		return "/list-customer";
+		
 	}
 }
 
